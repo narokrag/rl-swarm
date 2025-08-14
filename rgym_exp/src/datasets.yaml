@@ -69,8 +69,8 @@ datasets:
       min_terms: 2
       max_terms: 4            # 6 -> 4
       min_num_decimal_places: 1
-      max_num_decimal_places: 2 # 3 -> 2
-      precision: 3              # 5 -> 3 agar output tidak panjang
+      max_num_decimal_places: 3 # 3 -> 2
+      precision: 5              # 5 -> 3 agar output tidak panjang
       seed: 42
 
   # Fraction simplification
