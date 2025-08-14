@@ -35,8 +35,8 @@ datasets:
     weight: 1
     config:
       min_base: 2
-      max_base: 4
-      min_value: 0
+      max_base: 3
+      min_value: 499
       max_value: 500
       seed: 1239
       size: 500
