@@ -9,7 +9,7 @@ datasets:
     weight: 1
     config:
       min_size: 10
-      max_size: 30
+      max_size: 11
       num_train: 3
       seed: 42
       size: 500
@@ -19,9 +19,9 @@ datasets:
     weight: 1
     config:
       min_terms: 2
-      max_terms: 6
+      max_terms: 3
       min_digits: 1
-      max_digits: 4
+      max_digits: 2
       operators: ["+", "-", "*", "/"]
       allow_parentheses: true
       allow_negation: true
@@ -35,9 +35,9 @@ datasets:
     weight: 1
     config:
       min_base: 2
-      max_base: 16
+      max_base: 4
       min_value: 0
-      max_value: 1000
+      max_value: 500
       seed: 1239
       size: 500
 
@@ -54,7 +54,7 @@ datasets:
     weight: 1
     config:
       min_n: 3
-      max_n: 10
+      max_n: 4
       p_zero: 0.25
       seed: 1236
       size: 500
@@ -75,9 +75,9 @@ datasets:
     weight: 1
     config:
       min_terms: 2
-      max_terms: 6
+      max_terms: 3
       min_num_decimal_places: 1
-      max_num_decimal_places: 3
+      max_num_decimal_places: 2
       precision: 5  
       seed: 1235
       size: 500
@@ -87,9 +87,9 @@ datasets:
     weight: 1
     config:
       min_value: 1
-      max_value: 100
+      max_value: 2
       min_factor: 2
-      max_factor: 100
+      max_factor: 2
       styles: ["plain", "latex_frac", "latex_dfrac"]
       seed: 1236
       size: 500
@@ -99,10 +99,10 @@ datasets:
     weight: 1
     config:
       min_vars: 2
-      max_vars: 4
+      max_vars: 3
       min_statements: 2
-      max_statements: 4
+      max_statements: 3
       min_complexity: 1
-      max_complexity: 3
+      max_complexity: 2
       seed: 1238
       size: 500
