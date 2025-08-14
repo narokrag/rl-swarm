@@ -1,108 +1,97 @@
-# Composite Dataset Configuration for Reasoning Gym
-# This file defines multiple datasets with their weights and configurations
-
-size: 1000  # Total virtual size of the composite dataset
-seed: 42    # Seed for reproducibility
+# Composite Dataset Configuration — Stable / No-Spike
+size: 1000    # total sampel virtual per epoch (atau per iterasi komposit)
+seed: 42
 
 datasets:
   - name: arc_1d
     weight: 1
     config:
-      min_size: 10
-      max_size: 30
+      min_size: 8
+      max_size: 16        # turunkan dari 30 agar grid tidak meledak
       num_train: 3
       seed: 42
-      size: 500
 
   # Basic arithmetic operations
   - name: basic_arithmetic
     weight: 1
     config:
       min_terms: 2
-      max_terms: 6
+      max_terms: 4        # 6 -> 4 untuk memangkas panjang ekspresi
       min_digits: 1
-      max_digits: 4
-      operators: ["+", "-", "*", "/"]
-      allow_parentheses: true
-      allow_negation: true
+      max_digits: 3       # 4 -> 3 untuk jaga panjang token
+      operators: ["+", "-", "*"]  # hilangkan "/" untuk hindari edge-case & string panjang
+      allow_parentheses: false     # kurangi variasi & panjang
+      allow_negation: false
       format_style: "natural"
       whitespace: "single"
-      seed: 1234
-      size: 500
-  
+      seed: 42
+
   # Base Conversion
   - name: base_conversion
     weight: 1
     config:
       min_base: 2
-      max_base: 16
+      max_base: 12        # 16 -> 12 mengurangi output panjang
       min_value: 0
-      max_value: 1000
-      seed: 1239
-      size: 500
+      max_value: 4095     # batasi supaya representasi tidak terlalu panjang
+      seed: 42
 
   # BrainF***
   - name: bf
     weight: 1
-    config: 
-      difficulty: 1
-      seed: 1238
-      size: 500
+    config:
+      difficulty: 1       # tetap rendah; hindari program panjang
+      seed: 42
 
   # Binary Matrix
   - name: binary_matrix
     weight: 1
     config:
       min_n: 3
-      max_n: 7
-      p_zero: 0.25
-      seed: 1236
-      size: 500
-      
-  # Calendar arithmetic for date calculations
+      max_n: 5            # 7 -> 5 untuk memangkas ukuran dan kolom lebar
+      p_zero: 0.5         # keseimbangan 0/1 agar pola tidak terlalu padat
+      seed: 42
+
+  # Calendar arithmetic
   - name: calendar_arithmetic
     weight: 1
     config:
       year: 2023
-      offset_upper_bound: 100
+      offset_upper_bound: 60   # 100 -> 60 menghindari kasus tanggal jauh
       leap_year_range: 200
       tasks: ["count_days", "weekday_of_date", "is_leap_year", "recurring_event_day"]
-      seed: 1237
-      size: 500
+      seed: 42
 
-  # Decimal arithmetic for more complex calculations
+  # Decimal arithmetic
   - name: decimal_arithmetic
     weight: 1
     config:
       min_terms: 2
-      max_terms: 6
+      max_terms: 4            # 6 -> 4
       min_num_decimal_places: 1
-      max_num_decimal_places: 3
-      precision: 5  
-      seed: 1235
-      size: 500
-      
-  # Fraction simplification problems
+      max_num_decimal_places: 2 # 3 -> 2
+      precision: 3              # 5 -> 3 agar output tidak panjang
+      seed: 42
+
+  # Fraction simplification
   - name: fraction_simplification
     weight: 1
     config:
       min_value: 1
-      max_value: 100
+      max_value: 50            # 100 -> 50 membatasi angka besar
       min_factor: 2
-      max_factor: 100
-      styles: ["plain", "latex_frac", "latex_dfrac"]
-      seed: 1236
-      size: 500
-      
+      max_factor: 50
+      styles: ["plain"]        # hindari latex_frac/latex_dfrac (verbose)
+      seed: 42
+
   # Logic puzzles
   - name: propositional_logic
     weight: 1
     config:
       min_vars: 2
-      max_vars: 4
+      max_vars: 3              # 4 -> 3
       min_statements: 2
-      max_statements: 4
+      max_statements: 3        # 4 -> 3
       min_complexity: 1
-      max_complexity: 3
-      seed: 1238
-      size: 500
+      max_complexity: 2        # 3 -> 2
+      seed: 42
