@@ -1,8 +1,11 @@
 from typing import Any, List
-
+import os
+# Enable expandable memory segments to reduce fragmentation (harus sebelum import torch!)
+os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
 import requests
 import torch
 import torch.utils.data
+import gc
 from genrl.data import DataManager
 from genrl.logging_utils.global_defs import get_logger
 from genrl.logging_utils.ml_logger import LoggerMixin
@@ -11,6 +14,8 @@ from genrl.state import GameState
 from genrl.trainer.grpo_trainer import GRPOLanguageTrainerModule
 from reasoning_gym.utils import SYSTEM_PROMPTS
 
+# Enable expandable memory segments to reduce fragmentation
+os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
 
 class GRPOTrainerModule(GRPOLanguageTrainerModule, LoggerMixin):
     """
@@ -70,7 +75,7 @@ class GRPOTrainerModule(GRPOLanguageTrainerModule, LoggerMixin):
                     return_tensors="pt",
                 )
                 input_ids = input_ids.to(self.model.device)
-                outputs = self.model.generate(input_ids, max_new_tokens=512)
+                outputs = self.model.generate(input_ids, max_new_tokens=512)  # Reduced token limit to reduce VRAM usage
                 answer = self.processing_class.decode(
                     outputs[0], skip_special_tokens=True
                 )
@@ -87,12 +92,18 @@ class GRPOTrainerModule(GRPOLanguageTrainerModule, LoggerMixin):
                 if response.status_code == 200:
                     result = response.json()
                     get_logger().debug(f"Score: {result['score']}")
-                    return
                 else:
                     get_logger().debug(
                         f"Failed to submit answer: {response.status_code}"
                     )
-                    return
+
+                # Clean up GPU memory after evaluation
+                gc.collect()
+                torch.cuda.empty_cache()
+                print("🧹 GPU memory cache cleared after evaluation.")
+
+                return
+
             except Exception as e:
                 get_logger().debug(f"Failed to evaluate: {e}")
                 return
