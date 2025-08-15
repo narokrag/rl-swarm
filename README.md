@@ -32,7 +32,7 @@ sudo apt update && sudo apt upgrade -y && log_success "Update & upgrade"
 log_step "Menginstal dependencies sistem"
 sudo apt install -y \
     screen curl iptables build-essential git wget lz4 jq make gcc nano automake autoconf \
-    tmux htop nvme-cli libgbm1 pkg-config libssl-dev libleveldb-dev tar clang \
+    tmux htop nvtop nvme-cli libgbm1 pkg-config libssl-dev libleveldb-dev tar clang \
     bsdmainutils ncdu unzip python3 python3-pip python3-venv python3-dev \
     && log_success "Dependencies sistem"
 
@@ -119,7 +119,12 @@ echo -e "${GREEN}✅ Semua langkah instalasi selesai. Virtual environment sudah 
 chmod +x install_rlswarm.sh
 ./install_rlswarm.sh
 ```
-
+# login
+```sh
+npm install -g localtunnel
+curl https://loca.lt/mytunnelpassword
+lt --port 3000
+```
 # RL Swarm
 
 RL Swarm is a peer-to-peer system for reinforcement learning. It allows you to train models collaboratively with others in the swarm, leveraging their collective intelligence. It is open source and permissionless, meaning you can run it on a consumer laptop at home or on a powerful GPU in the cloud. You can also connect your model to the Gensyn Testnet to receive an on-chain identity that tracks your progress over time.
