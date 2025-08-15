@@ -113,7 +113,12 @@ EOF
 echo -e "${GREEN}✅ Semua langkah instalasi selesai. Virtual environment sudah aktif.${RESET}"
 
 ```
-
+# masukan swarm.pem file kamu
+# eksekusi
+```sh
+chmod +x install_rlswarm.sh
+./install_rlswarm.sh
+```
 
 # RL Swarm
 
