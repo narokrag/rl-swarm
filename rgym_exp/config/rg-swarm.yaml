@@ -57,10 +57,11 @@ game_manager:
     models:
       - _target_: transformers.AutoModelForCausalLM.from_pretrained
         pretrained_model_name_or_path: ${oc.env:MODEL_NAME, ${gpu_model_choice:${default_large_model_pool},${default_small_model_pool}}} 
+        torch_dtype: bfloat16
     config:
       _target_: trl.trainer.GRPOConfig
       logging_dir: ${log_dir}
-      fp16: ${training.fp16}
+      fp16: false
     log_with: wandb
     log_dir: ${log_dir}
     epsilon: 0.2
@@ -70,7 +71,7 @@ game_manager:
   data_manager:
     _target_: rgym_exp.src.data.ReasoningGymDataManager
     yaml_config_path: "rgym_exp/src/datasets.yaml"
-    num_train_samples: 10 #24 vram 0.5B = 10
+    num_train_samples: 20
     num_evaluation_samples: 0
     num_generations: ${training.num_generations}
     system_prompt_id: 'default'
@@ -96,4 +97,4 @@ default_large_model_pool:
 
 default_small_model_pool:
   - Gensyn/Qwen2.5-0.5B-Instruct
-  - Qwen/Qwen3-0.6B
+  #- Qwen/Qwen3-0.6B
