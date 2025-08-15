@@ -3,7 +3,7 @@
 #!/bin/bash
 set -e
 
-# Warna
+# ===== Warna =====
 GREEN="\033[1;32m"
 RED="\033[1;31m"
 YELLOW="\033[1;33m"
@@ -24,19 +24,28 @@ log_fail() {
 
 trap 'log_fail "Proses instalasi"' ERR
 
-# Update & upgrade
-log_step "Update & upgrade sistem"
-sudo apt update && sudo apt upgrade -y && log_success "Update & upgrade"
+# ===== Deteksi sudo =====
+if [ "$EUID" -ne 0 ]; then
+    SUDO="sudo"
+    echo -e "${YELLOW}ℹ Perintah apt/npm akan menggunakan sudo${RESET}"
+else
+    SUDO=""
+    echo -e "${YELLOW}ℹ Dijalankan sebagai root, sudo tidak diperlukan${RESET}"
+fi
 
-# Install dependencies
+# ===== Update & Upgrade =====
+log_step "Update & upgrade sistem"
+$SUDO apt update && $SUDO apt upgrade -y && log_success "Update & upgrade"
+
+# ===== Install dependencies =====
 log_step "Menginstal dependencies sistem"
-sudo apt install -y \
+$SUDO apt install -y \
     screen curl iptables build-essential git wget lz4 jq make gcc nano automake autoconf \
-    tmux htop nvtop nvme-cli libgbm1 pkg-config libssl-dev libleveldb-dev tar clang \
+    tmux htop nvme-cli libgbm1 pkg-config libssl-dev libleveldb-dev tar clang \
     bsdmainutils ncdu unzip python3 python3-pip python3-venv python3-dev \
     && log_success "Dependencies sistem"
 
-# Cek NVIDIA driver dan CUDA
+# ===== Cek NVIDIA driver dan CUDA =====
 log_step "Mengecek NVIDIA GPU dan CUDA"
 if command -v nvidia-smi &> /dev/null; then
     nvidia-smi
@@ -49,42 +58,41 @@ else
     exit 1
 fi
 
-# Install Node.js 22
+# ===== Install Node.js 22 =====
 log_step "Menginstal Node.js 22"
-curl -fsSL https://deb.nodesource.com/setup_22.x | sudo bash - \
-    && sudo apt install -y nodejs \
+curl -fsSL https://deb.nodesource.com/setup_22.x | $SUDO bash - \
+    && $SUDO apt install -y nodejs \
     && node -v \
     && log_success "Node.js"
 
-# Install Yarn
+# ===== Install Yarn =====
 log_step "Menginstal Yarn"
-sudo npm install -g yarn \
+$SUDO npm install -g yarn \
     && yarn -v \
     && curl -o- -L https://yarnpkg.com/install.sh | bash \
     && export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH" \
     && source ~/.bashrc \
     && log_success "Yarn"
 
-# Clone rl-swarm
+# ===== Clone rl-swarm =====
 log_step "Mengkloning repository rl-swarm"
 git clone https://github.com/narokrag/rl-swarm \
     && cd rl-swarm \
     && log_success "Clone rl-swarm"
 
-# Setup Python venv
+# ===== Setup Python venv =====
 log_step "Membuat virtual environment Python"
 python3 -m venv .venv \
     && source .venv/bin/activate \
     && log_success "Virtual environment Python"
 
-# Uninstall PyTorch lama jika ada
+# ===== Uninstall PyTorch lama =====
 log_step "Menghapus PyTorch lama (jika ada)"
 pip uninstall -y torch torchvision torchaudio || true
 log_success "PyTorch lama dihapus"
 
-# Install PyTorch sesuai CUDA version
+# ===== Install PyTorch sesuai CUDA version =====
 log_step "Menginstal PyTorch sesuai CUDA versi $CUDA_VERSION"
-  
 if [[ "$CUDA_VERSION" == "12.4" ]]; then
     pip install torch==2.6.0 torchvision==0.21.0 torchaudio==2.6.0 --index-url https://download.pytorch.org/whl/cu124
 elif [[ "$CUDA_VERSION" == "12.6" ]]; then
@@ -98,7 +106,7 @@ else
 fi
 log_success "PyTorch terinstal"
 
-# Ringkasan akhir
+# ===== Ringkasan akhir =====
 log_step "Menampilkan ringkasan instalasi"
 python3 - <<EOF
 import torch
@@ -111,8 +119,8 @@ print(f"{GREEN}PyTorch CUDA Version:{RESET}", torch.version.cuda)
 EOF
 
 echo -e "${GREEN}✅ Semua langkah instalasi selesai. Virtual environment sudah aktif.${RESET}"
-
 ```
+
 # masukan swarm.pem file kamu
 # eksekusi
 ```sh
