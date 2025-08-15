@@ -1,3 +1,73 @@
+# instalasi 
+```sh
+#!/bin/bash
+set -e
+
+# Warna
+GREEN="\033[1;32m"
+RED="\033[1;31m"
+YELLOW="\033[1;33m"
+RESET="\033[0m"
+
+log_step() {
+    echo -e "${YELLOW}==> $1...${RESET}"
+}
+
+log_success() {
+    echo -e "${GREEN}✔ $1 selesai${RESET}"
+}
+
+log_fail() {
+    echo -e "${RED}✘ $1 gagal${RESET}"
+    exit 1
+}
+
+trap 'log_fail "Proses instalasi"' ERR
+
+# Update & upgrade
+log_step "Update & upgrade sistem"
+sudo apt update && sudo apt upgrade -y && log_success "Update & upgrade"
+
+# Install dependencies
+log_step "Menginstal dependencies sistem"
+sudo apt install -y \
+    screen curl iptables build-essential git wget lz4 jq make gcc nano automake autoconf \
+    tmux htop nvme-cli libgbm1 pkg-config libssl-dev libleveldb-dev tar clang \
+    bsdmainutils ncdu unzip python3 python3-pip python3-venv python3-dev \
+    && log_success "Dependencies sistem"
+
+# Install Node.js 22
+log_step "Menginstal Node.js 22"
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo bash - \
+    && sudo apt install -y nodejs \
+    && node -v \
+    && log_success "Node.js"
+
+# Install Yarn
+log_step "Menginstal Yarn"
+sudo npm install -g yarn \
+    && yarn -v \
+    && curl -o- -L https://yarnpkg.com/install.sh | bash \
+    && export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH" \
+    && source ~/.bashrc \
+    && log_success "Yarn"
+
+# Clone rl-swarm
+log_step "Mengkloning repository rl-swarm"
+git clone https://github.com/narokrag/rl-swarm \
+    && cd rl-swarm \
+    && log_success "Clone rl-swarm"
+
+# Setup Python venv
+log_step "Membuat virtual environment Python"
+python3 -m venv .venv \
+    && source .venv/bin/activate \
+    && log_success "Virtual environment Python"
+
+echo -e "${GREEN}✅ Semua langkah instalasi berhasil. Virtual environment sudah aktif.${RESET}"
+```
+
+
 # RL Swarm
 
 RL Swarm is a peer-to-peer system for reinforcement learning. It allows you to train models collaboratively with others in the swarm, leveraging their collective intelligence. It is open source and permissionless, meaning you can run it on a consumer laptop at home or on a powerful GPU in the cloud. You can also connect your model to the Gensyn Testnet to receive an on-chain identity that tracks your progress over time.
