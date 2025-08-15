@@ -41,7 +41,7 @@ $SUDO apt update && $SUDO apt upgrade -y && log_success "Update & upgrade"
 log_step "Menginstal dependencies sistem"
 $SUDO apt install -y \
     screen curl iptables build-essential git wget lz4 jq make gcc nano automake autoconf \
-    tmux htop nvme-cli libgbm1 pkg-config libssl-dev libleveldb-dev tar clang \
+    tmux htop nvtop nvme-cli libgbm1 pkg-config libssl-dev libleveldb-dev tar clang \
     bsdmainutils ncdu unzip python3 python3-pip python3-venv python3-dev \
     && log_success "Dependencies sistem"
 
