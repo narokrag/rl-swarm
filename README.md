@@ -106,10 +106,15 @@ echo -e "https://pytorch.org/get-started/locally/"
 
 ```
 
-# masukan swarm.pem file kamu
 # eksekusi
 ```sh
 source install.sh
+```
+# install porch sesuai max cuda kamu
+# masukan swarm.pem file kamu
+# menjalankan node
+```sh
+./run_rl_swarm.sh
 ```
 # login
 ```sh
