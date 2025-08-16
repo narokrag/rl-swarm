@@ -110,7 +110,7 @@ echo -e "https://pytorch.org/get-started/locally/"
 ```sh
 source install.sh
 ```
-# install porch sesuai max cuda kamu
+# install ptorch sesuai max cuda kamu
 # masukan swarm.pem file kamu
 # menjalankan node
 ```sh
