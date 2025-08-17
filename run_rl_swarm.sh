@@ -259,9 +259,15 @@ echo_green ">> Good luck in the swarm!"
 echo_blue ">> And remember to star the repo on GitHub! --> https://github.com/gensyn-ai/rl-swarm"
 
 # skrip auto restart node
-while true; do
-    echo_green ">> Starting rl-swarm node..."
+# Flag untuk menghentikan loop
+STOP_LOOP=false
 
+# Tangkap Ctrl+C
+trap 'echo_red ">> Ctrl+C diterima, menghentikan rl-swarm..."; STOP_LOOP=true' SIGINT
+
+# Loop auto-restart
+while [ "$STOP_LOOP" = false ]; do
+    echo_green ">> Starting rl-swarm node..."
     python -m rgym_exp.runner.swarm_launcher \
         --config-path "$ROOT/rgym_exp/config" \
         --config-name "rg-swarm.yaml"
@@ -269,7 +275,6 @@ while true; do
     EXIT_CODE=$?
     echo_red ">> rl-swarm exited with code $EXIT_CODE"
 
-    # Jika OOM, biasanya exit code 137 atau 9
     if [[ $EXIT_CODE -eq 137 || $EXIT_CODE -eq 9 ]]; then
         echo_red ">> Detected OOM Kill. Restarting after 30s..."
         sleep 30
@@ -278,5 +283,8 @@ while true; do
         sleep 10
     fi
 done
+
+echo_green ">> rl-swarm loop berhenti."
+
 # skrip berakhir
 
