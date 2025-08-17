@@ -262,4 +262,26 @@ python -m rgym_exp.runner.swarm_launcher \
     --config-path "$ROOT/rgym_exp/config" \
     --config-name "rg-swarm.yaml" 
 
+# skrip auto restart node
+while true; do
+    echo_green ">> Starting rl-swarm node..."
+
+    python -m rgym_exp.runner.swarm_launcher \
+        --config-path "$ROOT/rgym_exp/config" \
+        --config-name "rg-swarm.yaml"
+
+    EXIT_CODE=$?
+    echo_red ">> rl-swarm exited with code $EXIT_CODE"
+
+    # Jika OOM, biasanya exit code 137 atau 9
+    if [[ $EXIT_CODE -eq 137 || $EXIT_CODE -eq 9 ]]; then
+        echo_red ">> Detected OOM Kill. Restarting after 30s..."
+        sleep 30
+    else
+        echo_red ">> Restarting node in 10s..."
+        sleep 10
+    fi
+done
+# skrip berakhir
+
 wait  # Keep script running until Ctrl+C
