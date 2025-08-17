@@ -280,4 +280,3 @@ while true; do
 done
 # skrip berakhir
 
-wait  # Keep script running until Ctrl+C
