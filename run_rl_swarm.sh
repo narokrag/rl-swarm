@@ -8,6 +8,10 @@ ROOT=$PWD
 # GenRL Swarm version to use
 GENRL_TAG="0.1.6"
 
+# ✅ CUDA memory optimization (mengurangi fragmentasi VRAM & OOM error)
+# 128MB dipilih sebagai ukuran blok optimal untuk GPU 12–24GB.
+# Bisa ubah ke 256 untuk GPU >48GB jika ingin overhead lebih ringan.
+export PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True,max_split_size_mb:128"
 export IDENTITY_PATH
 export GENSYN_RESET_CONFIG
 export CONNECT_TO_TESTNET=true
