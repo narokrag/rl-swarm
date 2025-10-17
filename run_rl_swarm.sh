@@ -6,7 +6,7 @@ set -euo pipefail
 ROOT=$PWD
 
 # GenRL Swarm version to use
-GENRL_TAG="0.1.9"
+GENRL_TAG="0.1.10"
 
 # ✅ CUDA memory optimization (mengurangi fragmentasi VRAM & OOM error)
 # 128MB dipilih sebagai ukuran blok optimal untuk GPU 12–24GB.
